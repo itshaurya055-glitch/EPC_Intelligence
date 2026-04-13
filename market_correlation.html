@@ -2,150 +2,181 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f8f7f4">
 <title>Global Market Correlation Simulator</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f8f7f4;
+    --card: #ffffff;
+    --border: rgba(0,0,0,0.10);
+    --text: #1a1a18;
+    --muted: #5F5E5A;
+    --hint: #888780;
+    --surface: #f1efe8;
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: #f8f7f4;
-    color: #1a1a18;
-    padding: 24px 16px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans", sans-serif;
+    background: var(--bg);
+    color: var(--text);
     min-height: 100vh;
+    min-height: 100dvh;
+    padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(32px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+    -webkit-tap-highlight-color: transparent;
   }
-  h1 { font-size: 20px; font-weight: 500; margin-bottom: 4px; }
-  .subtitle { font-size: 13px; color: #5F5E5A; margin-bottom: 20px; }
-  .card {
-    background: #ffffff;
-    border: 0.5px solid rgba(0,0,0,0.12);
-    border-radius: 12px;
-    padding: 16px 20px;
-    margin-bottom: 12px;
-  }
-  .section-title {
-    font-size: 11px;
-    color: #888780;
-    font-weight: 500;
-    margin-bottom: 12px;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-  }
+
+  h1 { font-size: clamp(17px, 4.5vw, 22px); font-weight: 500; margin-bottom: 4px; line-height: 1.3; }
+  .subtitle { font-size: clamp(11px, 3vw, 13px); color: var(--muted); margin-bottom: 18px; line-height: 1.5; }
+  .section-title { font-size: 11px; color: var(--hint); font-weight: 600; margin-bottom: 14px; letter-spacing: 0.06em; text-transform: uppercase; }
+
+  .card { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius); padding: clamp(14px, 4vw, 20px); margin-bottom: 12px; }
+
+  /* Market rows: stack on phones, single line on tablets */
   .market-row {
     display: grid;
-    grid-template-columns: 110px 1fr 64px 90px;
+    grid-template-areas: "info val" "slider corr";
+    grid-template-columns: 1fr auto;
+    gap: 3px 8px;
+    margin-bottom: 18px;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 14px;
   }
-  .mkt-label { font-size: 13px; font-weight: 500; color: #1a1a18; }
-  .mkt-sub { font-size: 11px; color: #888780; }
-  .mkt-val { font-size: 14px; font-weight: 500; text-align: right; }
-  .corr-badge {
-    font-size: 11px;
-    padding: 2px 7px;
-    border-radius: 4px;
-    text-align: center;
-    font-weight: 500;
+  .mkt-info    { grid-area: info;   display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
+  .mkt-val     { grid-area: val;    font-size: 14px; font-weight: 500; text-align: right; white-space: nowrap; }
+  .slider-wrap { grid-area: slider; }
+  .corr-pill   { grid-area: corr;   font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; text-align: center; white-space: nowrap; }
+  .mkt-label   { font-size: clamp(13px, 3.5vw, 14px); font-weight: 500; }
+  .mkt-sub     { font-size: 11px; color: var(--hint); }
+
+  @media (min-width: 520px) {
+    .market-row {
+      grid-template-areas: "info slider val corr";
+      grid-template-columns: 130px 1fr 56px 80px;
+      grid-template-rows: auto;
+      gap: 10px;
+      align-items: center;
+    }
+    .mkt-info { flex-direction: column; gap: 1px; }
+    .corr-pill { font-size: 11px; }
   }
+
+  /* Touch-friendly range sliders */
   input[type="range"] {
-    width: 100%;
-    height: 4px;
-    accent-color: #1D9E75;
-    cursor: pointer;
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 44px;
+    background: transparent; cursor: pointer;
+    padding: 0; margin: 0;
+    touch-action: pan-y;
   }
-  .macro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .macro-label { font-size: 12px; color: #5F5E5A; margin-bottom: 4px; }
-  .metric-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
-  .metric { background: #f1efe8; border-radius: 8px; padding: 10px 12px; }
-  .metric-label { font-size: 11px; color: #888780; margin-bottom: 4px; }
-  .metric-value { font-size: 22px; font-weight: 500; }
-  .verdict-box {
-    border-radius: 8px;
-    padding: 12px 16px;
-    font-size: 14px;
-    font-weight: 500;
-    margin-bottom: 12px;
+  input[type="range"]::-webkit-slider-runnable-track { height: 5px; border-radius: 3px; background: var(--surface); }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: #1D9E75; margin-top: -10.5px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.20);
   }
-  .bar-track { height: 6px; background: #f1efe8; border-radius: 3px; flex: 1; overflow: hidden; }
-  .bar-fill { height: 6px; border-radius: 3px; transition: width 0.25s; }
-  .contrib-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-  .contrib-lbl { font-size: 12px; color: #5F5E5A; width: 78px; flex-shrink: 0; }
-  .contrib-val { font-size: 12px; font-weight: 500; min-width: 50px; text-align: right; }
-  canvas { display: block; }
+  input[type="range"]::-moz-range-track { height: 5px; border-radius: 3px; background: var(--surface); }
+  input[type="range"]::-moz-range-thumb { width: 26px; height: 26px; border-radius: 50%; background: #1D9E75; border: none; box-shadow: 0 1px 5px rgba(0,0,0,0.20); }
+
+  .divider { border: none; border-top: 0.5px solid var(--border); margin: 16px 0; }
+
+  .macro-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+  @media (min-width: 460px) { .macro-grid { grid-template-columns: 1fr 1fr; } }
+  .macro-label { font-size: 12px; color: var(--muted); margin-bottom: 2px; line-height: 1.5; }
+  .macro-label strong { color: var(--text); }
+
+  .verdict-box { border-radius: var(--radius-sm); padding: 14px 16px; font-size: clamp(13px, 3.5vw, 14px); font-weight: 500; margin-bottom: 12px; line-height: 1.4; transition: background 0.3s, color 0.3s; }
+
+  .metric-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; margin-bottom: 12px; }
+  .metric { background: var(--surface); border-radius: var(--radius-sm); padding: 10px 12px; }
+  .metric-label { font-size: 11px; color: var(--hint); margin-bottom: 4px; }
+  .metric-value { font-size: clamp(16px, 4.5vw, 22px); font-weight: 500; line-height: 1.2; transition: color 0.3s; }
+
+  .contrib-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .contrib-lbl { font-size: 12px; color: var(--muted); width: clamp(64px, 18vw, 80px); flex-shrink: 0; }
+  .bar-track { height: 7px; background: var(--surface); border-radius: 4px; flex: 1; overflow: hidden; }
+  .bar-fill { height: 7px; border-radius: 4px; transition: width 0.25s; }
+  .contrib-val { font-size: 12px; font-weight: 500; min-width: 52px; text-align: right; white-space: nowrap; }
+
+  .radar-wrap { position: relative; width: 100%; height: clamp(200px, 55vw, 290px); }
+
+  .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
   .btn {
-    padding: 7px 14px;
-    font-size: 13px;
-    border: 0.5px solid rgba(0,0,0,0.2);
-    border-radius: 8px;
-    background: transparent;
-    cursor: pointer;
-    color: #1a1a18;
+    padding: 10px clamp(10px, 3vw, 16px);
+    font-size: clamp(12px, 3vw, 13px);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--card);
+    cursor: pointer; color: var(--text);
     transition: background 0.15s;
+    min-height: 44px; min-width: 44px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
-  .btn:hover { background: #f1efe8; }
-  .btn-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
-  .divider { border: none; border-top: 0.5px solid rgba(0,0,0,0.08); margin: 14px 0; }
-  @media (max-width: 520px) {
-    .market-row { grid-template-columns: 90px 1fr 50px; }
-    .corr-badge { display: none; }
-    .metric-grid { grid-template-columns: repeat(2, 1fr); }
-    .macro-grid { grid-template-columns: 1fr; }
-  }
+  .btn:active { background: var(--surface); }
+
+  .foot-note { font-size: 11px; color: var(--hint); margin-top: 16px; line-height: 1.7; padding-bottom: 8px; }
 </style>
 </head>
 <body>
 
 <h1>Global market correlation simulator</h1>
-<p class="subtitle">Adjust overnight market moves to see the projected Nifty 50 opening gap · Correlations based on 2022–2024 research</p>
+<p class="subtitle">Drag overnight market moves · see Nifty 50 projected opening gap · correlations from 2022–2024 research</p>
 
 <div class="card">
-  <div class="section-title">Overnight inputs — drag to simulate</div>
+  <div class="section-title">Overnight inputs</div>
 
   <div class="market-row">
-    <div><div class="mkt-label">S&amp;P 500</div><div class="mkt-sub">US · closes 1:30 AM IST</div></div>
-    <input type="range" id="sp500" min="-4" max="4" step="0.1" value="0" oninput="update()">
+    <div class="mkt-info"><span class="mkt-label">S&amp;P 500</span><span class="mkt-sub">US · 1:30 AM IST close</span></div>
     <div class="mkt-val" id="sp500-v" style="color:#185FA5">0.0%</div>
-    <div class="corr-badge" style="background:#E6F1FB;color:#0C447C;">corr ~0.45</div>
+    <div class="slider-wrap"><input type="range" id="sp500" min="-4" max="4" step="0.1" value="0" oninput="update()"></div>
+    <div class="corr-pill" style="background:#E6F1FB;color:#0C447C;">0.45</div>
   </div>
 
   <div class="market-row">
-    <div><div class="mkt-label">Nasdaq</div><div class="mkt-sub">US tech · IT proxy</div></div>
-    <input type="range" id="nasdaq" min="-4" max="4" step="0.1" value="0" oninput="update()">
+    <div class="mkt-info"><span class="mkt-label">Nasdaq</span><span class="mkt-sub">US tech · IT proxy</span></div>
     <div class="mkt-val" id="nasdaq-v" style="color:#185FA5">0.0%</div>
-    <div class="corr-badge" style="background:#E6F1FB;color:#0C447C;">corr ~0.55</div>
+    <div class="slider-wrap"><input type="range" id="nasdaq" min="-4" max="4" step="0.1" value="0" oninput="update()"></div>
+    <div class="corr-pill" style="background:#E6F1FB;color:#0C447C;">0.55</div>
   </div>
 
   <div class="market-row">
-    <div><div class="mkt-label">Hang Seng</div><div class="mkt-sub">HK · strongest lag</div></div>
-    <input type="range" id="hsi" min="-4" max="4" step="0.1" value="0" oninput="update()">
+    <div class="mkt-info"><span class="mkt-label">Hang Seng</span><span class="mkt-sub">HK · strongest lag</span></div>
     <div class="mkt-val" id="hsi-v" style="color:#0F6E56">0.0%</div>
-    <div class="corr-badge" style="background:#E1F5EE;color:#085041;">corr ~0.65</div>
+    <div class="slider-wrap"><input type="range" id="hsi" min="-4" max="4" step="0.1" value="0" oninput="update()"></div>
+    <div class="corr-pill" style="background:#E1F5EE;color:#085041;">0.65</div>
   </div>
 
   <div class="market-row">
-    <div><div class="mkt-label">Nikkei 225</div><div class="mkt-sub">Tokyo · opens 6:30 IST</div></div>
-    <input type="range" id="nikkei" min="-4" max="4" step="0.1" value="0" oninput="update()">
+    <div class="mkt-info"><span class="mkt-label">Nikkei 225</span><span class="mkt-sub">Tokyo · 6:30 AM IST</span></div>
     <div class="mkt-val" id="nikkei-v" style="color:#854F0B">0.0%</div>
-    <div class="corr-badge" style="background:#FAEEDA;color:#633806;">corr ~0.65</div>
+    <div class="slider-wrap"><input type="range" id="nikkei" min="-4" max="4" step="0.1" value="0" oninput="update()"></div>
+    <div class="corr-pill" style="background:#FAEEDA;color:#633806;">0.65</div>
   </div>
 
   <div class="market-row">
-    <div><div class="mkt-label">ASX 200</div><div class="mkt-sub">Sydney · opens 5:15 IST</div></div>
-    <input type="range" id="asx" min="-4" max="4" step="0.1" value="0" oninput="update()">
+    <div class="mkt-info"><span class="mkt-label">ASX 200</span><span class="mkt-sub">Sydney · 5:15 AM IST</span></div>
     <div class="mkt-val" id="asx-v" style="color:#854F0B">0.0%</div>
-    <div class="corr-badge" style="background:#FAEEDA;color:#633806;">corr ~0.55</div>
+    <div class="slider-wrap"><input type="range" id="asx" min="-4" max="4" step="0.1" value="0" oninput="update()"></div>
+    <div class="corr-pill" style="background:#FAEEDA;color:#633806;">0.55</div>
   </div>
 
   <hr class="divider">
   <div class="section-title">Macro amplifiers</div>
   <div class="macro-grid">
     <div>
-      <div class="macro-label">Dollar Index (DXY) &nbsp;<strong id="dxy-v">neutral</strong></div>
-      <input type="range" id="dxy" min="-2" max="2" step="0.5" value="0" oninput="update()" style="width:100%">
+      <div class="macro-label">Dollar Index (DXY)<br><strong id="dxy-v">neutral</strong></div>
+      <input type="range" id="dxy" min="-2" max="2" step="0.5" value="0" oninput="update()">
     </div>
     <div>
-      <div class="macro-label">US 10yr Yield &nbsp;<strong id="yield-v">neutral</strong></div>
-      <input type="range" id="yield10" min="-2" max="2" step="0.5" value="0" oninput="update()" style="width:100%">
+      <div class="macro-label">US 10yr yield<br><strong id="yield-v">neutral</strong></div>
+      <input type="range" id="yield10" min="-2" max="2" step="0.5" value="0" oninput="update()">
     </div>
   </div>
 </div>
@@ -160,7 +191,7 @@
     <div class="metric-value" id="gap-val">+0.00%</div>
   </div>
   <div class="metric">
-    <div class="metric-label">Signal strength</div>
+    <div class="metric-label">Strength</div>
     <div class="metric-value" id="sig-val">—</div>
   </div>
   <div class="metric">
@@ -174,177 +205,151 @@
   <div id="contrib-bars"></div>
 </div>
 
-<div class="card" style="padding:16px;">
+<div class="card">
   <div class="section-title">Market influence radar</div>
-  <div style="position:relative;height:240px;">
-    <canvas id="radarChart" role="img" aria-label="Radar chart showing each market's influence weight on Nifty based on current slider values">Radar chart of market influence</canvas>
+  <div class="radar-wrap">
+    <canvas id="radarChart" role="img" aria-label="Radar chart showing each market's correlation-weighted influence on Nifty">Radar chart of market influence on Nifty 50</canvas>
   </div>
 </div>
 
-<div class="btn-group">
-  <button class="btn" onclick="setScenario('bull')">Bull scenario ↗</button>
-  <button class="btn" onclick="setScenario('bear')">Bear scenario ↘</button>
-  <button class="btn" onclick="setScenario('us_crash')">US crash, Asia holds</button>
-  <button class="btn" onclick="setScenario('fed_hike')">Fed hawkish + strong $</button>
-  <button class="btn" onclick="setScenario('reset')">Reset</button>
+<div class="card">
+  <div class="section-title">Quick scenarios</div>
+  <div class="btn-group">
+    <button class="btn" onclick="setScenario('bull')">Bull ↗</button>
+    <button class="btn" onclick="setScenario('bear')">Bear ↘</button>
+    <button class="btn" onclick="setScenario('us_crash')">US crash, Asia holds</button>
+    <button class="btn" onclick="setScenario('fed_hike')">Fed hawkish + strong $</button>
+    <button class="btn" onclick="setScenario('reset')">Reset</button>
+  </div>
 </div>
 
-<p style="font-size:11px;color:#888780;margin-top:16px;">
-  Model uses weighted correlation coefficients from JETIR / BusinessToday research (2022–2024).
-  Hang Seng 28%, Nasdaq 22%, S&amp;P 500 20%, Nikkei 18%, ASX 12%.
-  Macro overlay: DXY ±0.15 per unit, 10yr yield ±0.12 per unit. For educational use only — not financial advice.
+<p class="foot-note">
+  Correlation weights: Hang Seng 28% · Nasdaq 22% · S&amp;P 500 20% · Nikkei 18% · ASX 12%<br>
+  Macro overlay: DXY ±0.15 per unit · 10yr yield ±0.12 per unit<br>
+  Source: JETIR / BusinessToday research 2022–2024 · Educational use only — not financial advice
 </p>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-const WEIGHTS = { sp500:0.20, nasdaq:0.22, hsi:0.28, nikkei:0.18, asx:0.12 };
-const CORRS   = { sp500:0.45, nasdaq:0.55, hsi:0.65, nikkei:0.65, asx:0.55 };
-const COLORS  = { sp500:'#185FA5', nasdaq:'#378ADD', hsi:'#0F6E56', nikkei:'#854F0B', asx:'#BA7517' };
-const LABELS  = { sp500:'S&P 500', nasdaq:'Nasdaq', hsi:'Hang Seng', nikkei:'Nikkei', asx:'ASX 200' };
+const WEIGHTS = {sp500:0.20,nasdaq:0.22,hsi:0.28,nikkei:0.18,asx:0.12};
+const CORRS   = {sp500:0.45,nasdaq:0.55,hsi:0.65,nikkei:0.65,asx:0.55};
+const COLORS  = {sp500:'#185FA5',nasdaq:'#378ADD',hsi:'#0F6E56',nikkei:'#854F0B',asx:'#BA7517'};
+const LABELS  = {sp500:'S&P 500',nasdaq:'Nasdaq',hsi:'Hang Seng',nikkei:'Nikkei',asx:'ASX 200'};
 
-let radarChart = null;
+const DXY_LBL = {'-2':'strong $ (bearish)','-1.5':'firm $','-1':'mild $ strength','-0.5':'slight $ up','0':'neutral','0.5':'slight $ weak','1':'mild $ weakness','1.5':'soft $','2':'weak $ (bullish)'};
+const YLD_LBL = {'-2':'falling sharply','-1.5':'easing','-1':'down','-0.5':'slight ease','0':'neutral','0.5':'slight rise','1':'rising','1.5':'firm','2':'spike (bearish)'};
 
-const dxyLabels = {
-  '-2':'strong $ (bearish India)','-1.5':'firm $','-1':'mild $ strength',
-  '-0.5':'slight $ up','0':'neutral','0.5':'slight $ weak',
-  '1':'mild $ weakness','1.5':'soft $','2':'weak $ (bullish India)'
-};
-const yldLabels = {
-  '-2':'yields falling sharply','-1.5':'yields easing','-1':'yields down',
-  '-0.5':'slight ease','0':'neutral','0.5':'slight rise',
-  '1':'yields rising','1.5':'yields firm','2':'yields spike (bearish)'
-};
+let chart = null;
+const $ = id => document.getElementById(id);
+const flt = id => parseFloat($(id).value);
+const fmt = x => (x >= 0 ? '+' : '') + x.toFixed(1) + '%';
 
-function getVal(id){ return parseFloat(document.getElementById(id).value); }
+function update() {
+  const v = {sp500:flt('sp500'),nasdaq:flt('nasdaq'),hsi:flt('hsi'),nikkei:flt('nikkei'),asx:flt('asx')};
+  const dxy = flt('dxy'), yld = flt('yield10');
 
-function update(){
-  const v = {
-    sp500: getVal('sp500'), nasdaq: getVal('nasdaq'),
-    hsi: getVal('hsi'), nikkei: getVal('nikkei'), asx: getVal('asx')
-  };
-  const dxy = getVal('dxy');
-  const yld = getVal('yield10');
-
-  const fmt = x => (x >= 0 ? '+' : '') + x.toFixed(1) + '%';
-  document.getElementById('sp500-v').textContent  = fmt(v.sp500);
-  document.getElementById('nasdaq-v').textContent = fmt(v.nasdaq);
-  document.getElementById('hsi-v').textContent    = fmt(v.hsi);
-  document.getElementById('nikkei-v').textContent = fmt(v.nikkei);
-  document.getElementById('asx-v').textContent    = fmt(v.asx);
-  document.getElementById('dxy-v').textContent    = dxyLabels[dxy.toFixed(1)] ?? (dxy > 0 ? 'bearish $' : 'bullish $');
-  document.getElementById('yield-v').textContent  = yldLabels[yld.toFixed(1)] ?? (yld > 0 ? 'rising' : 'falling');
+  $('sp500-v').textContent  = fmt(v.sp500);
+  $('nasdaq-v').textContent = fmt(v.nasdaq);
+  $('hsi-v').textContent    = fmt(v.hsi);
+  $('nikkei-v').textContent = fmt(v.nikkei);
+  $('asx-v').textContent    = fmt(v.asx);
+  $('dxy-v').textContent    = DXY_LBL[dxy.toFixed(1)] ?? (dxy > 0 ? 'bearish $' : 'bullish $');
+  $('yield-v').textContent  = YLD_LBL[yld.toFixed(1)] ?? (yld > 0 ? 'rising' : 'falling');
 
   let raw = 0;
   const contribs = {};
-  for(const k in WEIGHTS){
-    contribs[k] = v[k] * WEIGHTS[k] * CORRS[k];
-    raw += contribs[k];
-  }
-  const macroAdj = (-dxy * 0.15) + (-yld * 0.12);
-  const projected = raw + macroAdj;
+  for (const k in WEIGHTS) { contribs[k] = v[k] * WEIGHTS[k] * CORRS[k]; raw += contribs[k]; }
+  const projected = raw + (-dxy * 0.15) + (-yld * 0.12);
 
-  const gapEl = document.getElementById('gap-val');
+  const gapEl = $('gap-val');
   gapEl.textContent = (projected >= 0 ? '+' : '') + projected.toFixed(2) + '%';
   gapEl.style.color = projected > 0.3 ? '#0F6E56' : projected < -0.3 ? '#A32D2D' : '#1a1a18';
 
   const absP = Math.abs(projected);
-  document.getElementById('sig-val').textContent =
-    absP < 0.2 ? 'Weak' : absP < 0.5 ? 'Moderate' : absP < 1.2 ? 'Strong' : 'Very strong';
+  $('sig-val').textContent = absP < 0.2 ? 'Weak' : absP < 0.5 ? 'Moderate' : absP < 1.2 ? 'Strong' : 'Very strong';
 
-  const fiiEl = document.getElementById('fii-val');
+  const fiiEl = $('fii-val');
   const fii = projected > 0.4 ? 'Buy' : projected < -0.4 ? 'Sell' : 'Neutral';
   fiiEl.textContent = fii;
   fiiEl.style.color = fii === 'Buy' ? '#0F6E56' : fii === 'Sell' ? '#A32D2D' : '#1a1a18';
 
-  const vb = document.getElementById('verdict-box');
-  if(projected > 0.8){
-    vb.style.background='#E1F5EE'; vb.style.color='#085041';
-    vb.textContent='Strong gap-up likely at 9:15 AM — bullish global setup';
-  } else if(projected > 0.3){
-    vb.style.background='#EAF3DE'; vb.style.color='#27500A';
-    vb.textContent='Mild gap-up expected — positive cues from overnight markets';
-  } else if(projected > -0.3){
-    vb.style.background='#f1efe8'; vb.style.color='#5F5E5A';
-    vb.textContent='Flat open likely — mixed or neutral global signals';
-  } else if(projected > -0.8){
-    vb.style.background='#FCEBEB'; vb.style.color='#791F1F';
-    vb.textContent='Mild gap-down expected — weak global cues';
-  } else {
-    vb.style.background='#F7C1C1'; vb.style.color='#501313';
-    vb.textContent='Strong gap-down likely — risk-off across global markets';
+  const vb = $('verdict-box');
+  const verdicts = [
+    [ 0.8,  '#E1F5EE','#085041','Strong gap-up likely at 9:15 AM — bullish global setup'],
+    [ 0.3,  '#EAF3DE','#27500A','Mild gap-up expected — positive overnight cues'],
+    [-0.3,  '#f1efe8','#5F5E5A','Flat open likely — mixed or neutral global signals'],
+    [-0.8,  '#FCEBEB','#791F1F','Mild gap-down expected — weak global cues'],
+    [-Infinity,'#F7C1C1','#501313','Strong gap-down likely — risk-off globally']
+  ];
+  for (const [thr, bg, col, msg] of verdicts) {
+    if (projected > thr) { vb.style.background = bg; vb.style.color = col; vb.textContent = msg; break; }
   }
 
-  const bars = document.getElementById('contrib-bars');
+  const bars = $('contrib-bars');
   bars.innerHTML = '';
-  const maxC = Math.max(...Object.values(contribs).map(Math.abs), 0.01);
-  for(const k in contribs){
+  const maxC = Math.max(...Object.values(contribs).map(Math.abs), 0.001);
+  for (const k in contribs) {
     const pct = (Math.abs(contribs[k]) / maxC * 100).toFixed(0);
     const pos = contribs[k] >= 0;
     const row = document.createElement('div');
     row.className = 'contrib-row';
     row.innerHTML = `
       <span class="contrib-lbl">${LABELS[k]}</span>
-      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${pos ? COLORS[k] : '#E24B4A'};opacity:0.8"></div></div>
-      <span class="contrib-val" style="color:${pos ? COLORS[k] : '#A32D2D'}">${(contribs[k]>=0?'+':'')}${contribs[k].toFixed(3)}%</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${pos ? COLORS[k] : '#E24B4A'};opacity:0.85"></div></div>
+      <span class="contrib-val" style="color:${pos ? COLORS[k] : '#A32D2D'}">${contribs[k]>=0?'+':''}${contribs[k].toFixed(3)}%</span>
     `;
     bars.appendChild(row);
   }
 
-  if(radarChart){
-    radarChart.data.datasets[0].data = [
-      Math.abs(v.sp500) * CORRS.sp500,
-      Math.abs(v.nasdaq) * CORRS.nasdaq,
-      Math.abs(v.hsi) * CORRS.hsi,
-      Math.abs(v.nikkei) * CORRS.nikkei,
-      Math.abs(v.asx) * CORRS.asx
-    ];
-    radarChart.data.datasets[0].backgroundColor = projected >= 0 ? 'rgba(29,158,117,0.18)' : 'rgba(226,75,74,0.18)';
-    radarChart.data.datasets[0].borderColor = projected >= 0 ? '#1D9E75' : '#E24B4A';
-    radarChart.update('none');
+  if (chart) {
+    chart.data.datasets[0].data = Object.keys(CORRS).map(k => Math.abs(v[k]) * CORRS[k]);
+    chart.data.datasets[0].backgroundColor = projected >= 0 ? 'rgba(29,158,117,0.18)' : 'rgba(226,75,74,0.18)';
+    chart.data.datasets[0].borderColor = projected >= 0 ? '#1D9E75' : '#E24B4A';
+    chart.update('none');
   }
 }
 
-function setScenario(name){
+function setScenario(name) {
   const sets = {
-    bull:     { sp500:1.5,  nasdaq:2.0,  hsi:1.2,  nikkei:1.0,  asx:0.8,  dxy:-1,   yield10:-0.5 },
-    bear:     { sp500:-2.0, nasdaq:-2.5, hsi:-1.8, nikkei:-1.5, asx:-1.2, dxy:1,    yield10:1    },
-    us_crash: { sp500:-3.0, nasdaq:-3.5, hsi:-0.5, nikkei:-0.8, asx:-0.4, dxy:1.5,  yield10:0    },
-    fed_hike: { sp500:-1.0, nasdaq:-1.5, hsi:-0.8, nikkei:-0.5, asx:-0.3, dxy:2,    yield10:2    },
-    reset:    { sp500:0,    nasdaq:0,    hsi:0,    nikkei:0,    asx:0,    dxy:0,    yield10:0    }
+    bull:     {sp500:1.5, nasdaq:2.0, hsi:1.2, nikkei:1.0, asx:0.8, dxy:-1,  yield10:-0.5},
+    bear:     {sp500:-2,  nasdaq:-2.5,hsi:-1.8,nikkei:-1.5,asx:-1.2,dxy:1,   yield10:1},
+    us_crash: {sp500:-3,  nasdaq:-3.5,hsi:-0.5,nikkei:-0.8,asx:-0.4,dxy:1.5, yield10:0},
+    fed_hike: {sp500:-1,  nasdaq:-1.5,hsi:-0.8,nikkei:-0.5,asx:-0.3,dxy:2,   yield10:2},
+    reset:    {sp500:0,   nasdaq:0,   hsi:0,   nikkei:0,   asx:0,   dxy:0,   yield10:0}
   };
   const s = sets[name];
-  ['sp500','nasdaq','hsi','nikkei','asx','dxy','yield10'].forEach(k => {
-    document.getElementById(k).value = s[k];
-  });
+  ['sp500','nasdaq','hsi','nikkei','asx','dxy','yield10'].forEach(k => $(k).value = s[k]);
   update();
 }
 
-window.addEventListener('load', function(){
-  radarChart = new Chart(document.getElementById('radarChart'), {
+window.addEventListener('load', () => {
+  const sm = window.innerWidth < 480;
+  chart = new Chart($('radarChart'), {
     type: 'radar',
     data: {
       labels: ['S&P 500','Nasdaq','Hang Seng','Nikkei','ASX 200'],
-      datasets:[{
+      datasets: [{
         label: 'Influence on Nifty',
         data: [0,0,0,0,0],
         backgroundColor: 'rgba(29,158,117,0.18)',
         borderColor: '#1D9E75',
         borderWidth: 1.5,
         pointBackgroundColor: '#1D9E75',
-        pointRadius: 3
+        pointRadius: sm ? 5 : 3,
+        pointHoverRadius: 7
       }]
     },
-    options:{
-      responsive:true,
-      maintainAspectRatio:false,
-      plugins:{ legend:{ display:false } },
-      scales:{
-        r:{
-          min:0, max:3,
-          ticks:{ stepSize:1, color:'#888780', font:{size:11}, backdropColor:'transparent' },
-          grid:{ color:'rgba(0,0,0,0.07)' },
-          angleLines:{ color:'rgba(0,0,0,0.07)' },
-          pointLabels:{ color:'#5F5E5A', font:{size:12} }
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        r: {
+          min: 0, max: 3,
+          ticks: { stepSize: 1, color: '#888780', font: { size: sm ? 10 : 11 }, backdropColor: 'transparent' },
+          grid: { color: 'rgba(0,0,0,0.07)' },
+          angleLines: { color: 'rgba(0,0,0,0.07)' },
+          pointLabels: { color: '#5F5E5A', font: { size: sm ? 11 : 12 } }
         }
       }
     }

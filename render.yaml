@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: market-correlation-simulator
+    runtime: static
+    buildCommand: "echo 'Deploying static site'"
+    staticPublishPath: .
+    autoDeployTrigger: commit
