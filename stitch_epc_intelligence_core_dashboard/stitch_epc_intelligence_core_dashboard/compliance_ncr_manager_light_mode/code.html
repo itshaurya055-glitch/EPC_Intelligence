@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EPC Intelligence Core | Spec Compliance &amp; NCR Manager</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .ncr-card-glow:hover {
+            box-shadow: 0 4px 20px -5px rgba(0, 107, 95, 0.1);
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f7f9fb;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#006b5f",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#2dd4bf",
+                        "on-primary-container": "#00201c",
+                        "secondary": "#006b4d",
+                        "on-secondary": "#ffffff",
+                        "secondary-container": "#6ffbbe",
+                        "on-secondary-container": "#002113",
+                        "tertiary": "#4646c6",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#e1e0ff",
+                        "on-tertiary-container": "#07006c",
+                        "error": "#ba1a1a",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-error-container": "#410002",
+                        "background": "#f7f9fb",
+                        "on-background": "#191c1b",
+                        "surface": "#f7f9fb",
+                        "on-surface": "#191c1b",
+                        "surface-variant": "#dae5e1",
+                        "on-surface-variant": "#3f4946",
+                        "outline": "#6f7976",
+                        "outline-variant": "#bec9c5",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f2f4f6",
+                        "surface-container": "#ebedef",
+                        "surface-container-high": "#e5e7e9",
+                        "surface-container-highest": "#dfe1e3",
+                        "inverse-surface": "#2d3130",
+                        "inverse-on-surface": "#eff1ef",
+                        "inverse-primary": "#57f1db"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-margin": "24px",
+                        "gutter": "16px",
+                        "sidebar-width": "280px",
+                        "section-gap": "48px",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["JetBrains Mono"],
+                        "headline-lg": ["Inter"],
+                        "display": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-sm": ["JetBrains Mono"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-x-hidden">
+<!-- Top AppBar -->
+<header class="fixed top-0 w-full z-40 bg-surface-container-lowest border-b border-outline-variant flex justify-between items-center h-16 px-container-margin">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary cursor-pointer">menu</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">EPC Intelligence Core</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex gap-6 items-center px-4">
+<span class="text-on-surface-variant font-label-md text-label-md cursor-pointer hover:text-primary transition-colors">Documentation</span>
+<span class="text-primary font-bold font-label-md text-label-md cursor-pointer">Compliance Manager</span>
+</div>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="User profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzSu3cQRMvajek1yLrej3fDb5nPA8rg5Gt_HqNktwG1s-9vW0r-sAdSBXsasuhQO9NJRJ-3LRJmZfeFk5Zpwxzn7kdvNXA_7ry3OvGqBSurQ04zHHndZdBzac4H1TqGfRhtsQfWMGqJzEyoiu6x7afbVT6FIP3gU7FVwWtUD3v6mHaptQwgN35-3tyySrb-KwiM6miCXRW4cGryRC3WQcOkllXKWMmWCDwFX65dqqZxYDvugebS-D0YfZetIvXXRf1zfBAfIcw_9Yr"/>
+</div>
+</div>
+</header>
+<!-- Navigation Drawer (Sidebar) -->
+<aside class="fixed left-0 top-0 h-full w-sidebar-width z-50 bg-surface-container-low border-r border-outline-variant hidden md:flex flex-col py-6">
+<div class="px-6 mb-8 flex flex-col gap-1">
+<h2 class="font-headline-md text-headline-md text-primary font-bold">Intelligence Core</h2>
+<p class="text-on-surface-variant font-body-sm text-body-sm">Lead Engineer</p>
+<span class="text-outline font-label-sm text-label-sm mt-2">v2.4.0</span>
+</div>
+<nav class="flex-1 px-2 space-y-1">
+<div class="flex items-center gap-4 text-on-surface-variant py-3 px-4 hover:bg-surface-container-highest transition-all duration-200 cursor-pointer">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant py-3 px-4 hover:bg-surface-container-highest transition-all duration-200 cursor-pointer">
+<span class="material-symbols-outlined">swap_horiz</span>
+<span class="font-label-md text-label-md">Project Switcher</span>
+</div>
+<div class="flex items-center gap-4 bg-secondary-container text-on-secondary-container rounded-r-full py-3 px-4 cursor-default">
+<span class="material-symbols-outlined">construction</span>
+<span class="font-label-md text-label-md">Site Monitoring</span>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant py-3 px-4 hover:bg-surface-container-highest transition-all duration-200 cursor-pointer">
+<span class="material-symbols-outlined">description</span>
+<span class="font-label-md text-label-md">Documentation</span>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant py-3 px-4 hover:bg-surface-container-highest transition-all duration-200 cursor-pointer">
+<span class="material-symbols-outlined">smart_toy</span>
+<span class="font-label-md text-label-md">RFI Copilot</span>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant py-3 px-4 hover:bg-surface-container-highest transition-all duration-200 cursor-pointer">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</div>
+</nav>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:ml-sidebar-width pt-16 min-h-screen">
+<div class="p-container-margin max-w-[1600px] mx-auto space-y-6">
+<!-- Hero / Trigger Check Section -->
+<section class="bg-surface-container-lowest p-6 border border-outline-variant rounded-lg">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div class="space-y-4 flex-1">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined">verified</span>
+<h2 class="font-headline-md text-headline-md">Spec Compliance Engine</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+<div class="space-y-1">
+<label class="font-label-sm text-label-sm text-outline uppercase">Active Specification</label>
+<select class="w-full bg-surface-container-lowest border border-outline-variant text-on-surface p-3 rounded-lg focus:ring-1 focus:ring-primary focus:outline-none appearance-none cursor-pointer">
+<option>Div 26 05 00 - Common Work Results for Electrical</option>
+<option>Div 23 00 00 - HVAC Infrastructure</option>
+<option>Div 27 00 00 - Communications/Data Cabling</option>
+</select>
+</div>
+<div class="space-y-1">
+<label class="font-label-sm text-label-sm text-outline uppercase">Target Submittal</label>
+<select class="w-full bg-surface-container-lowest border border-outline-variant text-on-surface p-3 rounded-lg focus:ring-1 focus:ring-primary focus:outline-none appearance-none cursor-pointer">
+<option>SUB-E-102: UPS Switchgear Modules</option>
+<option>SUB-M-045: CRAC Cooling Units</option>
+<option>SUB-S-012: Structural Reinforcement</option>
+</select>
+</div>
+</div>
+</div>
+<button class="bg-primary text-on-primary h-14 px-8 font-bold rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition-opacity whitespace-nowrap">
+<span class="material-symbols-outlined">analytics</span>
+                        Run Compliance Scan
+                    </button>
+</div>
+</section>
+<!-- Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Panel: Summary & Deviations -->
+<div class="lg:col-span-4 space-y-gutter">
+<!-- Summary Card -->
+<div class="bg-surface-container-lowest p-6 border border-outline-variant rounded-lg">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-6">Scan Summary</h3>
+<div class="flex items-center justify-center py-4 relative">
+<!-- Simple SVG Pie Chart Placeholder -->
+<div class="w-40 h-40 rounded-full border-[12px] border-surface-container relative flex items-center justify-center">
+<div class="absolute inset-0 rounded-full border-[12px] border-error border-t-transparent border-l-transparent -rotate-45"></div>
+<div class="absolute inset-0 rounded-full border-[12px] border-primary-container border-b-transparent border-r-transparent rotate-[120deg]"></div>
+<div class="text-center">
+<span class="block text-headline-lg font-bold">12</span>
+<span class="text-label-sm text-outline">TOTAL NCRs</span>
+</div>
+</div>
+</div>
+<div class="mt-8 space-y-3">
+<div class="flex justify-between items-center p-3 bg-error-container/20 border border-error/20 rounded">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-error"></div>
+<span class="font-label-md text-label-md text-error font-semibold">Critical</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface">02</span>
+</div>
+<div class="flex justify-between items-center p-3 bg-orange-100 border border-orange-200 rounded">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-orange-600"></div>
+<span class="font-label-md text-label-md text-orange-800 font-semibold">Major</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface">04</span>
+</div>
+<div class="flex justify-between items-center p-3 bg-yellow-100 border border-yellow-200 rounded">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-yellow-600"></div>
+<span class="font-label-md text-label-md text-yellow-900 font-semibold">Minor</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface">06</span>
+</div>
+</div>
+</div>
+<!-- Deviations List -->
+<div class="bg-surface-container-lowest p-6 border border-outline-variant rounded-lg flex flex-col h-[500px]">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-4">Found Deviations</h3>
+<div class="flex-1 overflow-y-auto space-y-4 pr-2">
+<div class="p-4 border-l-4 border-error bg-surface-container-low rounded-r-lg group cursor-pointer hover:bg-surface-container-high transition-colors">
+<p class="font-label-sm text-label-sm text-outline mb-1">Clause 26.01.05</p>
+<p class="text-on-surface font-medium line-clamp-2">Emergency shutdown bypass mechanism missing in submittal technical drawing A-4.</p>
+</div>
+<div class="p-4 border-l-4 border-orange-500 bg-surface-container-low rounded-r-lg group cursor-pointer hover:bg-surface-container-high transition-colors">
+<p class="font-label-sm text-label-sm text-outline mb-1">Clause 26.04.12</p>
+<p class="text-on-surface font-medium line-clamp-2">Specified cable jacket material (LSZH) not clearly identified in BOM line items.</p>
+</div>
+<div class="p-4 border-l-4 border-yellow-400 bg-surface-container-low rounded-r-lg group cursor-pointer hover:bg-surface-container-high transition-colors">
+<p class="font-label-sm text-label-sm text-outline mb-1">Clause 26.00.01</p>
+<p class="text-on-surface font-medium line-clamp-2">Labeling standards for secondary feeders use legacy naming convention instead of v3.1.</p>
+</div>
+<div class="p-4 border-l-4 border-orange-500 bg-surface-container-low rounded-r-lg group cursor-pointer hover:bg-surface-container-high transition-colors">
+<p class="font-label-sm text-label-sm text-outline mb-1">Clause 26.09.00</p>
+<p class="text-on-surface font-medium line-clamp-2">Grounding busbar dimensions deviate by -5mm from project minimum requirement.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Panel: NCR Log & AI Analysis -->
+<div class="lg:col-span-8 space-y-gutter">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden flex flex-col h-full min-h-[800px]">
+<div class="p-6 border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md text-on-surface">NCR Lifecycle Manager</h3>
+<div class="flex gap-2">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded transition-colors">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded transition-colors">
+<span class="material-symbols-outlined">download</span>
+</button>
+</div>
+</div>
+<div class="flex-1 p-6 space-y-6 overflow-y-auto bg-surface-container-low/50">
+<!-- NCR Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 ncr-card-glow transition-all shadow-sm">
+<div class="flex flex-wrap justify-between items-start gap-4 mb-6">
+<div class="space-y-1">
+<div class="flex items-center gap-3">
+<span class="font-label-md text-label-md bg-error-container text-error px-3 py-1 rounded border border-error/30 uppercase tracking-wider font-bold">Critical Deviation</span>
+<span class="font-label-sm text-label-sm text-outline font-label-md">ID: NCR-EL-204</span>
+</div>
+<h4 class="font-headline-md text-headline-md mt-2 text-on-surface">Spec 26.01.01: Arc Flash Mitigation</h4>
+</div>
+<div class="flex bg-surface-container p-1 rounded-lg border border-outline-variant">
+<button class="px-4 py-2 text-label-sm text-on-surface-variant hover:text-primary rounded-md transition-colors bg-surface-container-lowest font-bold text-primary shadow-sm">Open</button>
+<button class="px-4 py-2 text-label-sm text-on-surface-variant hover:text-primary rounded-md transition-colors font-medium">Resolved</button>
+<button class="px-4 py-2 text-label-sm text-on-surface-variant hover:text-primary rounded-md transition-colors font-medium">Waived</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
+<div class="space-y-4">
+<div>
+<p class="font-label-sm text-label-sm text-outline uppercase mb-2">Required Value</p>
+<p class="font-label-md text-label-md bg-surface-container-low p-3 rounded border border-outline-variant text-on-surface">Passive arc quenching system rated for 100kA symm @ 480V</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-outline uppercase mb-2">Submittal Value</p>
+<p class="font-label-md text-label-md bg-error-container/20 p-3 rounded border border-error/30 text-error font-medium">Active monitoring system only; passive quenching components not found.</p>
+</div>
+</div>
+<div class="bg-primary/5 border border-primary/20 p-5 rounded-lg flex flex-col gap-3">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-[20px]">smart_toy</span>
+<p class="font-label-md text-label-md font-bold">AI Recommendation</p>
+</div>
+<p class="text-body-sm text-on-surface-variant italic leading-relaxed">
+                                            "Reject current submittal. Manufacturer catalog page 42 shows an optional 'PQ-Module' which fulfills this requirement. Request updated drawings including the PQ-Module installation detail."
+                                        </p>
+<button class="mt-2 text-primary font-label-md text-label-md flex items-center gap-1 hover:underline underline-offset-4 font-bold">
+                                            Generate RFI Draft <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="pt-4 border-t border-outline-variant flex items-center justify-between text-on-surface-variant">
+<div class="flex items-center gap-4">
+<span class="text-label-sm">Modified: 2h ago</span>
+<span class="text-label-sm">Assignee: Sarah K.</span>
+</div>
+<button class="flex items-center gap-2 text-primary hover:opacity-80 font-semibold">
+<span class="material-symbols-outlined">attachment</span>
+<span class="text-label-sm">View Evidence (2)</span>
+</button>
+</div>
+</div>
+<!-- NCR Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 ncr-card-glow transition-all shadow-sm">
+<div class="flex flex-wrap justify-between items-start gap-4 mb-6">
+<div class="space-y-1">
+<div class="flex items-center gap-3">
+<span class="font-label-md text-label-md bg-orange-100 text-orange-800 px-3 py-1 rounded border border-orange-300 uppercase tracking-wider font-bold">Major Deviation</span>
+<span class="font-label-sm text-label-sm text-outline font-label-md">ID: NCR-EL-205</span>
+</div>
+<h4 class="font-headline-md text-headline-md mt-2 text-on-surface">Spec 26.04.12: Conduit Fill Ratios</h4>
+</div>
+<div class="flex bg-surface-container p-1 rounded-lg border border-outline-variant">
+<button class="px-4 py-2 text-label-sm text-on-surface-variant hover:text-primary rounded-md transition-colors bg-surface-container-lowest font-bold text-primary shadow-sm">Open</button>
+<button class="px-4 py-2 text-label-sm text-on-surface-variant hover:text-primary rounded-md transition-colors font-medium">Resolved</button>
+<button class="px-4 py-2 text-label-sm text-on-surface-variant hover:text-primary rounded-md transition-colors font-medium">Waived</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
+<div class="space-y-4">
+<div>
+<p class="font-label-sm text-label-sm text-outline uppercase mb-2">Required Value</p>
+<p class="font-label-md text-label-md bg-surface-container-low p-3 rounded border border-outline-variant text-on-surface">Max 40% fill ratio for all branch circuits per NEC 310.</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-outline uppercase mb-2">Submittal Value</p>
+<p class="font-label-md text-label-md bg-orange-50 p-3 rounded border border-orange-200 text-orange-900 font-medium">Section L-2 calculates at 42.5% fill ratio for 2" EMT runs.</p>
+</div>
+</div>
+<div class="bg-primary/5 border border-primary/20 p-5 rounded-lg flex flex-col gap-3">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-[20px]">smart_toy</span>
+<p class="font-label-md text-label-md font-bold">AI Recommendation</p>
+</div>
+<p class="text-body-sm text-on-surface-variant italic leading-relaxed">
+                                            "Non-critical but code-violating. Suggest upsizing conduit in Section L-2 to 2.5" EMT or splitting the circuits. Note that 2.5" EMT has a 25% higher cost per LF."
+                                        </p>
+<button class="mt-2 text-primary font-label-md text-label-md flex items-center gap-1 hover:underline underline-offset-4 font-bold">
+                                            View Cost Impact <span class="material-symbols-outlined text-[16px]">trending_up</span>
+</button>
+</div>
+</div>
+<div class="pt-4 border-t border-outline-variant flex items-center justify-between text-on-surface-variant">
+<div class="flex items-center gap-4">
+<span class="text-label-sm">Modified: 5h ago</span>
+<span class="text-label-sm">Assignee: Marcus T.</span>
+</div>
+<button class="flex items-center gap-2 text-primary hover:opacity-80 font-semibold">
+<span class="material-symbols-outlined">attachment</span>
+<span class="text-label-sm">View Evidence (1)</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Dashboard Visual Elements -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter mt-8">
+<div class="bg-surface-container-lowest p-6 border border-outline-variant rounded-lg shadow-sm">
+<p class="text-outline font-label-sm text-label-sm uppercase mb-2">Compliance Score</p>
+<div class="flex items-end gap-2">
+<span class="text-headline-lg font-bold text-secondary">88.4%</span>
+<span class="text-secondary font-label-sm font-bold mb-1">↑ 2.1%</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 border border-outline-variant rounded-lg shadow-sm">
+<p class="text-outline font-label-sm text-label-sm uppercase mb-2">Avg Resolution Time</p>
+<div class="flex items-end gap-2">
+<span class="text-headline-lg font-bold text-on-surface">4.2d</span>
+<span class="text-error font-label-sm font-bold mb-1">↓ 0.5d</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 border border-outline-variant rounded-lg shadow-sm">
+<p class="text-outline font-label-sm text-label-sm uppercase mb-2">Pending RFI Response</p>
+<div class="flex items-end gap-2">
+<span class="text-headline-lg font-bold text-primary">07</span>
+<span class="text-on-surface-variant font-label-sm mb-1 font-medium">Items</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 border border-outline-variant rounded-lg shadow-sm">
+<p class="text-outline font-label-sm text-label-sm uppercase mb-2">Risk Exposure</p>
+<div class="flex items-end gap-2">
+<span class="text-headline-lg font-bold text-orange-600">MED</span>
+<span class="text-orange-600 font-label-sm mb-1 font-bold">Trend Stable</span>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- FAB for quick action -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg hover:scale-110 transition-transform flex items-center justify-center z-50">
+<span class="material-symbols-outlined font-bold">add</span>
+</button>
+<script>
+        // Micro-interactions for status toggles
+        document.querySelectorAll('.flex.bg-surface-container.p-1.rounded-lg button').forEach(button => {
+            button.addEventListener('click', function() {
+                const parent = this.parentElement;
+                parent.querySelectorAll('button').forEach(btn => {
+                    btn.classList.remove('bg-surface-container-lowest', 'font-bold', 'text-primary', 'shadow-sm');
+                    btn.classList.add('font-medium');
+                });
+                this.classList.remove('font-medium');
+                this.classList.add('bg-surface-container-lowest', 'font-bold', 'text-primary', 'shadow-sm');
+            });
+        });
+    </script>
+</body></html>

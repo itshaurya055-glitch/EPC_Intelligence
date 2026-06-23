@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EPC Intelligence Core - RFI Knowledge Hub</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .stream-text::after {
+            content: '|';
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md overflow-hidden">
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-40 bg-background border-b border-outline-variant flex justify-between items-center h-16 px-container-margin w-full max-w-full">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary cursor-pointer">menu</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">EPC Intelligence Core</h1>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden md:flex items-center gap-4">
+<span class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors cursor-pointer">Project: Delta-9 Data Center</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">notifications</span>
+</div>
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center overflow-hidden border border-primary/20">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a senior lead engineer in their 40s wearing a technical jacket, set against a blurred background of a high-tech data center server room with blue and teal ambient lighting. The style is sharp, corporate, and follows a dark-mode professional aesthetic with high contrast." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8sG5zYzNxxloX7xa9ohpd4Qk_QllCvmozrEjqVgPm_G-1H2dcGzjQ4LSEQFbrCOW1MbBmauhc-cM4tt3qwhKP3hjm3q9B7SWAk2Tq1pVeEBXqRcHKGUjRXPSeukMY9_JrxHfZ0u4u6GkNI23WOBivPKUoQXxaftJWPlkaLm8sEm_t2z_iSlib6nTkxRCv4soHLKEz8jqfN_JnDrmtZ0WT-Pk5XlnFSjXoh17Mxf68-hH5-CJKYyXeXtWTEhqJ-1xZ6wK1IBTUDJrd"/>
+</div>
+</div>
+</header>
+<!-- Side Navigation -->
+<aside class="fixed left-0 top-0 h-full w-sidebar-width z-50 bg-surface-container border-r border-outline-variant hidden md:flex flex-col py-6">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3 mb-6">
+<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container">memory</span>
+</div>
+<div>
+<div class="font-headline-md text-headline-md text-primary font-bold">Intelligence Core</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">v2.4.0</div>
+</div>
+</div>
+</div>
+<nav class="flex-1 px-3 space-y-1">
+<a class="flex items-center gap-4 text-on-surface-variant py-3 px-4 hover:bg-surface-container-highest transition-all duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant py-3 px-4 hover:bg-surface-container-highest transition-all duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">swap_horiz</span>
+<span class="font-label-md text-label-md">Project Switcher</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant py-3 px-4 hover:bg-surface-container-highest transition-all duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">construction</span>
+<span class="font-label-md text-label-md">Site Monitoring</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant py-3 px-4 hover:bg-surface-container-highest transition-all duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-label-md text-label-md">Documentation</span>
+</a>
+<a class="flex items-center gap-4 bg-secondary-container text-on-secondary-container border-l-2 border-primary rounded-r-full py-3 px-4 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+<span class="font-label-md text-label-md">RFI Copilot</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant py-3 px-4 hover:bg-surface-container-highest transition-all duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<div class="p-4 glass-panel rounded-xl flex flex-col gap-3">
+<div class="text-primary font-label-md text-label-md flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">bolt</span> System Status
+                </div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-3/4"></div>
+</div>
+<div class="text-on-surface-variant font-label-sm text-label-sm">75% Sync Complete</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:pl-sidebar-width pt-16 h-screen flex flex-col">
+<!-- Header Section -->
+<div class="p-container-margin border-b border-outline-variant flex justify-between items-end">
+<div>
+<nav class="flex items-center gap-2 text-on-surface-variant mb-2">
+<span class="font-label-sm text-label-sm">KNOWLEDGE HUB</span>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="font-label-sm text-label-sm text-primary">RFI COPILOT</span>
+</nav>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">RFI Technical Assistant</h2>
+<p class="text-on-surface-variant font-body-md mt-1">AI-driven insights for engineering queries and site documentation.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded hover:bg-surface-container-highest transition-colors font-label-md text-label-md">
+<span class="material-symbols-outlined text-sm">history</span> History
+                </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded font-label-md text-label-md font-bold">
+<span class="material-symbols-outlined text-sm">add</span> New Request
+                </button>
+</div>
+</div>
+<!-- Chat Container -->
+<div class="flex-1 overflow-y-auto p-container-margin flex flex-col gap-gutter" id="chat-stream-container">
+<!-- User Message -->
+<div class="flex justify-end">
+<div class="max-w-[80%] p-4 bg-surface-container-highest rounded-xl rounded-tr-none border border-outline-variant">
+<p class="text-on-surface font-body-md">What are the specific requirements for the seismic anchoring of the PDU racks in Sector 7B based on the latest structural revisions?</p>
+<div class="mt-2 text-right text-on-surface-variant font-label-sm text-label-sm">10:42 AM</div>
+</div>
+</div>
+<!-- AI Response -->
+<div class="flex justify-start">
+<div class="max-w-[90%] w-full flex gap-4">
+<div class="w-10 h-10 rounded-full bg-on-secondary-fixed-variant flex items-center justify-center shrink-0 border border-primary/20 shadow-[0_0_15px_rgba(45,212,191,0.1)]">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</div>
+<div class="flex-1">
+<div class="p-6 glass-panel rounded-2xl rounded-tl-none border-l-4 border-l-primary">
+<div class="flex items-center justify-between mb-4">
+<span class="font-label-md text-label-md text-primary font-bold uppercase tracking-widest">Core Intelligence Analysis</span>
+<span class="flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span> Processing
+                                </span>
+</div>
+<div class="space-y-4 text-on-surface font-body-md leading-relaxed" id="stream-content">
+<p class="stream-text">Based on the Structural Revision v4.2 (issued Oct 12) and the Seismic Compliance Report (SCR-2023-009), the requirements for Sector 7B have been updated to reflect Seismic Design Category D. </p>
+<p>The anchoring specifications for the PDU racks are as follows:</p>
+<ul class="list-disc pl-5 space-y-2 text-on-surface-variant">
+<li><strong class="text-primary">Bolt Specification:</strong> 4x Hilti HST3-R M12 expansion anchors per rack base plate.</li>
+<li><strong class="text-primary">Minimum Embedment:</strong> 120mm effective depth into C30/37 reinforced concrete slab.</li>
+<li><strong class="text-primary">Torque Setting:</strong> 60 Nm (+/- 5Nm) verified by third-party inspection.</li>
+<li><strong class="text-primary">Clearance:</strong> Minimum 300mm spacing between anchor centers and existing structural reinforcement bars.</li>
+</ul>
+</div>
+<!-- Citations Tray (Collapsible Simulation) -->
+<div class="mt-6 pt-4 border-t border-outline-variant">
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm group" onclick="toggleCitations()">
+<span class="material-symbols-outlined transition-transform duration-200" id="chevron-icon">expand_more</span>
+                                    SOURCE CITATIONS (3)
+                                </button>
+<div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3 hidden" id="citations-content">
+<div class="p-3 bg-surface-container-low border border-outline-variant rounded-lg hover:border-primary/50 transition-all cursor-pointer group">
+<div class="flex items-center justify-between mb-2">
+<span class="text-primary font-label-sm text-label-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-xs">picture_as_pdf</span> STRUCT-7B-REV4.pdf
+                                            </span>
+<span class="text-on-surface-variant font-label-sm text-label-sm">p. 142</span>
+</div>
+<p class="text-on-surface-variant text-[12px] line-clamp-2 font-body-sm italic">"...all PDU units in high-vibration zones must adhere to the expanded bolt pattern defined in Table 4.2..."</p>
+</div>
+<div class="p-3 bg-surface-container-low border border-outline-variant rounded-lg hover:border-primary/50 transition-all cursor-pointer group">
+<div class="flex items-center justify-between mb-2">
+<span class="text-primary font-label-sm text-label-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-xs">picture_as_pdf</span> SEISMIC-COMP-009.pdf
+                                            </span>
+<span class="text-on-surface-variant font-label-sm text-label-sm">p. 28</span>
+</div>
+<p class="text-on-surface-variant text-[12px] line-clamp-2 font-body-sm italic">"Anchorage verification for Sector 7B requires ultrasonic rebar detection prior to drilling to ensure clearance..."</p>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-2 flex gap-3 px-2">
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-sm">thumb_up</span></button>
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-sm">thumb_down</span></button>
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-sm">content_copy</span></button>
+<button class="text-on-surface-variant hover:text-primary transition-colors ml-auto"><span class="material-symbols-outlined text-sm">share</span></button>
+</div>
+</div>
+</div>
+</div>
+<!-- Empty space for scrolling -->
+<div class="h-24"></div>
+</div>
+<!-- Input Area -->
+<div class="p-container-margin pt-0 bg-background/80 backdrop-blur-md">
+<div class="max-w-4xl mx-auto relative group">
+<div class="absolute -inset-0.5 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-xl blur opacity-30 group-focus-within:opacity-100 transition duration-300"></div>
+<div class="relative flex items-center bg-surface-container-low border border-outline-variant rounded-xl p-2 focus-within:border-primary transition-all shadow-xl">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">attach_file</span>
+</button>
+<input class="flex-1 bg-transparent border-none focus:ring-0 text-on-surface font-body-md px-3 placeholder:text-on-surface-variant/50" placeholder="Ask a technical question or query documentation..." type="text"/>
+<div class="flex items-center gap-2 pr-2">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors hidden sm:block">
+<span class="material-symbols-outlined">mic</span>
+</button>
+<button class="h-10 px-6 bg-primary text-on-primary font-bold font-label-md text-label-md rounded-lg flex items-center gap-2 hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-primary/20">
+                            ASK <span class="material-symbols-outlined text-sm">send</span>
+</button>
+</div>
+</div>
+<div class="mt-3 flex justify-center gap-4 text-on-surface-variant font-label-sm text-label-sm">
+<span class="flex items-center gap-1 cursor-pointer hover:text-primary"><span class="material-symbols-outlined text-xs">manage_search</span> Search All Projects</span>
+<span class="flex items-center gap-1 cursor-pointer hover:text-primary"><span class="material-symbols-outlined text-xs">history_edu</span> RFI Draft Mode</span>
+<span class="flex items-center gap-1 cursor-pointer hover:text-primary"><span class="material-symbols-outlined text-xs">auto_stories</span> Project Specs</span>
+</div>
+</div>
+</div>
+</main>
+<script>
+        function toggleCitations() {
+            const content = document.getElementById('citations-content');
+            const icon = document.getElementById('chevron-icon');
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                content.classList.add('hidden');
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Simple typing effect simulation
+        const streamDiv = document.getElementById('stream-content');
+        const textNodes = Array.from(streamDiv.childNodes);
+        streamDiv.innerHTML = '';
+        
+        let nodeIndex = 0;
+        function typeNode() {
+            if (nodeIndex < textNodes.length) {
+                const node = textNodes[nodeIndex].cloneNode(true);
+                streamDiv.appendChild(node);
+                nodeIndex++;
+                setTimeout(typeNode, 150);
+            }
+        }
+        
+        // Start typing after a delay
+        setTimeout(typeNode, 1000);
+
+        // Interactive states for buttons
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('mousedown', () => btn.classList.add('opacity-80'));
+            btn.addEventListener('mouseup', () => btn.classList.remove('opacity-80'));
+        });
+    </script>
+</body></html>

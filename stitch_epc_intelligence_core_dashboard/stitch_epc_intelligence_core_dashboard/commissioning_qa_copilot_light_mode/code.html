@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EPC Intelligence Core - Commissioning QA Copilot</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface": "#f7f9fb",
+                    "surface-dim": "#d8dadc",
+                    "surface-bright": "#f7f9fb",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-low": "#f2f4f6",
+                    "surface-container": "#eceef0",
+                    "surface-container-high": "#e6e8ea",
+                    "surface-container-highest": "#e0e2e4",
+                    "on-surface": "#191c1d",
+                    "on-surface-variant": "#404947",
+                    "outline": "#707977",
+                    "outline-variant": "#bfc9c5",
+                    "primary": "#006b5f",
+                    "on-primary": "#ffffff",
+                    "primary-container": "#2dd4bf",
+                    "on-primary-container": "#00201c",
+                    "secondary": "#006b4b",
+                    "on-secondary": "#ffffff",
+                    "secondary-container": "#6ffbbe",
+                    "on-secondary-container": "#002113",
+                    "tertiary": "#4a5990",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-container": "#d7d6ff",
+                    "on-tertiary-container": "#00124b",
+                    "error": "#ba1a1a",
+                    "on-error": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "on-error-container": "#410002",
+                    "background": "#f7f9fb",
+                    "on-background": "#191c1d"
+            },
+            "borderRadius": {
+                    "DEFAULT": "4px",
+                    "lg": "4px",
+                    "xl": "8px",
+                    "full": "12px"
+            },
+            "spacing": {
+                    "container-margin": "24px",
+                    "gutter": "16px",
+                    "sidebar-width": "280px",
+                    "section-gap": "48px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "label-md": ["JetBrains Mono"],
+                    "headline-lg": ["Inter"],
+                    "display": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-sm": ["JetBrains Mono"],
+                    "headline-lg-mobile": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-sm": ["Inter"]
+            },
+            "fontSize": {
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      body {
+        background-color: #f7f9fb;
+        color: #191c1d;
+        overflow-x: hidden;
+      }
+      .terminal-scroll::-webkit-scrollbar {
+        width: 6px;
+      }
+      .terminal-scroll::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .terminal-scroll::-webkit-scrollbar-thumb {
+        background: #bfc9c5;
+        border-radius: 3px;
+      }
+      .cursor-blink {
+        animation: blink 1s infinite;
+      }
+      @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0; }
+      }
+      .scanline {
+        background: linear-gradient(to bottom, rgba(247, 249, 251, 0) 50%, rgba(0, 0, 0, 0.05) 50%), linear-gradient(to right, rgba(0, 107, 95, 0.01), rgba(0, 0, 0, 0.01), rgba(0, 0, 0, 0.01));
+        background-size: 100% 4px, 3px 100%;
+        pointer-events: none;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="font-body-md text-body-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation Anchor -->
+<header class="fixed top-0 w-full z-40 bg-surface-container-lowest border-b border-outline-variant flex justify-between items-center h-16 px-container-margin">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" data-icon="menu">menu</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">EPC Intelligence Core</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-label-md text-label-md text-on-surface-variant hidden md:block">System Status: <span class="text-primary font-bold">Online</span></span>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant">
+<img alt="Professional headshot" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbHY4PqHgPgFILGOWmRjGmaqtiQ1MFHj6lKybiuhbHoFdQtTHmvoO3YkCQJuL5Jw9X-ri7jl3zLkKf5lVMXFObwQlp1kygwQ84w8PUw7NLv2NT69L-ZIe_plpkq6EjjadlcZ9E0OGaNgpwHSeJusFsu2hWq5JD-zGcvHqb-o3vRzqfWPoq-pAcpy7tfemr0I8nQJM49Cl1LY7wjdcuaLudP_vPyCtaMra29TDn7PSgVoZoCfm1ghlLMOPbKoS1vbjBoppjPIsbrIjr"/>
+</div>
+</div>
+</header>
+<!-- Sidebar Navigation Drawer -->
+<aside class="fixed left-0 top-0 h-full w-sidebar-width z-50 bg-surface-container border-r border-outline-variant hidden md:flex flex-col py-6">
+<div class="px-6 mb-8 flex flex-col gap-1">
+<span class="font-headline-md text-headline-md text-primary font-bold">Intelligence Core</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">v2.4.0</span>
+</div>
+<nav class="flex-1 flex flex-col gap-1 px-2">
+<a class="flex items-center gap-4 text-on-surface-variant py-3 px-4 hover:bg-surface-container-highest transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant py-3 px-4 hover:bg-surface-container-highest transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="swap_horiz">swap_horiz</span>
+<span class="font-label-md text-label-md">Project Switcher</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant py-3 px-4 hover:bg-surface-container-highest transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="construction">construction</span>
+<span class="font-label-md text-label-md">Site Monitoring</span>
+</a>
+<a class="flex items-center gap-4 bg-primary-container text-on-primary-container border-l-2 border-primary rounded-r-full py-3 px-4" href="#">
+<span class="material-symbols-outlined" data-icon="smart_toy">smart_toy</span>
+<span class="font-label-md text-label-md">RFI Copilot</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant py-3 px-4 hover:bg-surface-container-highest transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="font-label-md text-label-md">Documentation</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant py-3 px-4 mt-auto hover:bg-surface-container-highest transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:pl-sidebar-width pt-16 min-h-screen flex flex-col">
+<div class="p-container-margin flex-1 flex flex-col gap-6">
+<!-- Header Section -->
+<section class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Commissioning QA Copilot</h2>
+<p class="font-body-md text-on-surface-variant">Interactive QA Terminal &amp; Procedure Verification</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container-high border border-outline-variant" id="status-light">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-label-md text-label-md text-on-surface">Awaiting Session</span>
+</div>
+</div>
+</section>
+<!-- Main Layout Grid -->
+<div class="grid grid-cols-12 gap-gutter flex-1">
+<!-- Left Control Panel -->
+<div class="col-span-12 lg:col-span-4 flex flex-col gap-gutter">
+<!-- System Selector Card -->
+<div class="bg-surface-container-low border border-outline-variant p-6 rounded-lg flex flex-col gap-4">
+<h3 class="font-label-md text-label-md text-primary uppercase tracking-wider font-bold">Session Configuration</h3>
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-on-surface-variant">Select Equipment Subsystem</label>
+<select class="bg-surface-container-lowest border border-outline text-on-surface rounded px-4 py-2.5 font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all">
+<option>UPS A - Primary Modular</option>
+<option>Generator Set 01 - Emergency Backup</option>
+<option>Chiller C1 - Critical Cooling</option>
+<option>STS 04 - Static Transfer Switch</option>
+<option>PDU Cluster 12 - Rack Power</option>
+</select>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-on-surface-variant">Test Type</label>
+<select class="bg-surface-container-lowest border border-outline text-on-surface rounded px-4 py-2.5 font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all">
+<option>L3 Functional Verification</option>
+<option>L4 Integrated System Test</option>
+<option>Load Bank Certification</option>
+<option>Harmonic Analysis</option>
+</select>
+</div>
+<button class="w-full bg-primary-container text-on-primary-container py-3 px-6 rounded font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-all flex items-center justify-center gap-2 group mt-2 shadow-sm" onclick="startSession()">
+<span class="material-symbols-outlined group-hover:rotate-12 transition-transform" data-icon="play_arrow">play_arrow</span>
+                            START SESSION
+                        </button>
+</div>
+<!-- Input Form Card -->
+<div class="bg-surface-container-low border border-outline-variant p-6 rounded-lg flex flex-col gap-4">
+<h3 class="font-label-md text-label-md text-primary uppercase tracking-wider font-bold">Data Acquisition</h3>
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-on-surface-variant">Measured Value (V/A/kW/Hz)</label>
+<div class="relative">
+<input class="w-full bg-surface-container-lowest border border-outline text-on-surface rounded px-4 py-2.5 font-label-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="0.00" type="number"/>
+<span class="absolute right-4 top-2.5 text-on-surface-variant font-label-sm">VAL</span>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-on-surface-variant">Observations / Notes</label>
+<textarea class="w-full bg-surface-container-lowest border border-outline text-on-surface rounded px-4 py-2.5 font-body-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all resize-none" placeholder="Enter anomalies, serial numbers, or environmental conditions..." rows="4"></textarea>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<button class="bg-surface-container-highest text-on-surface-variant border border-outline-variant py-2.5 px-4 rounded font-label-md text-label-md hover:text-on-surface hover:border-outline transition-all">
+                                MARK NA
+                            </button>
+<button class="bg-primary-container text-on-primary-container py-2.5 px-4 rounded font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-all opacity-50 cursor-not-allowed" id="submit-btn">
+                                SUBMIT RESULT
+                            </button>
+</div>
+</div>
+</div>
+<!-- Right Terminal Panel -->
+<div class="col-span-12 lg:col-span-8 flex flex-col">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg flex flex-col h-[600px] shadow-lg relative overflow-hidden">
+<!-- Terminal Header -->
+<div class="bg-surface-container-high px-4 py-2 border-b border-outline-variant flex justify-between items-center">
+<div class="flex items-center gap-2">
+<div class="flex gap-1.5">
+<div class="w-3 h-3 rounded-full bg-error/60 border border-error"></div>
+<div class="w-3 h-3 rounded-full bg-tertiary-container border border-tertiary"></div>
+<div class="w-3 h-3 rounded-full bg-primary-container border border-primary"></div>
+</div>
+<span class="ml-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Procedural Terminal - QA_COPILOT_V2.4</span>
+</div>
+<span class="font-label-sm text-label-sm text-primary font-bold">ID: CX-2901-UPS</span>
+</div>
+<!-- Scanline Effect Overlay -->
+<div class="absolute inset-0 scanline opacity-20 z-10"></div>
+<!-- Terminal Output Content -->
+<div class="flex-1 p-6 font-label-md text-label-md overflow-y-auto terminal-scroll relative z-20 flex flex-col gap-4 text-on-surface" id="terminal-content">
+<div class="text-on-surface-variant">
+<span class="text-primary font-bold">[SYS]</span> Initializing EPC Intelligence Core Commissioning Subsystem...<br/>
+<span class="text-primary font-bold">[SYS]</span> Handshaking with Project Data... OK<br/>
+<span class="text-primary font-bold">[SYS]</span> Safety Protocols Loaded. Ready for input.
+                            </div>
+<!-- Procedure Step 1 (Mock) -->
+<div class="hidden" id="step-active">
+<div class="border-l-4 border-primary pl-4 py-3 bg-primary/5 rounded-r">
+<div class="text-primary font-bold">TASK 01.1: DC BUS VOLTAGE STABILITY CHECK</div>
+<div class="mt-2 text-on-surface space-y-1">
+<p>&gt; Action: Measure DC Link voltage at terminal T1-T2.</p>
+<p>&gt; Range: <span class="text-primary font-bold">480VDC - 540VDC</span> nominal.</p>
+<div class="flex gap-4 mt-2">
+<div class="flex items-center gap-1.5 text-error">
+<span class="material-symbols-outlined text-[18px]" data-icon="warning">warning</span>
+<span class="text-label-sm font-bold">ARC FLASH RISK: CAT IV PPE REQUIRED</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Terminal Footer -->
+<div class="p-4 bg-surface-container-low border-t border-outline-variant flex justify-between items-center relative z-20">
+<div class="flex gap-6">
+<div class="flex flex-col">
+<span class="text-[10px] text-on-surface-variant uppercase font-bold">Current Status</span>
+<span class="text-primary font-bold" id="live-indicator">READY</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] text-on-surface-variant uppercase font-bold">Session Time</span>
+<span class="font-label-md text-label-md text-on-surface" id="session-timer">00:00:00</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded bg-surface-container-lowest hover:bg-surface-container-highest transition-colors font-label-sm text-label-sm text-on-surface">
+<span class="material-symbols-outlined text-[18px]" data-icon="upload_file">upload_file</span>
+                                    IMPORT CSV
+                                </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary-container border border-outline-variant rounded hover:bg-primary hover:text-on-primary transition-colors font-label-sm text-label-sm text-on-primary-container">
+<span class="material-symbols-outlined text-[18px]" data-icon="picture_as_pdf">picture_as_pdf</span>
+                                    EXPORT TEST RECORD PDF
+                                </button>
+</div>
+</div>
+</div>
+<!-- Footer Meta Data -->
+<div class="mt-4 flex justify-between items-center px-2">
+<div class="flex gap-4 text-on-surface-variant font-label-sm">
+<span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-primary"></span> 12/48 Steps Complete</span>
+<span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-error"></span> 0 Critical Errors</span>
+</div>
+<div class="text-on-surface-variant font-label-sm">
+                            Lat: 37.7749° N, Lon: 122.4194° W | Data Sync: 22ms
+                        </div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Interactive JS logic -->
+<script>
+        let sessionActive = false;
+        let timerInterval;
+        let seconds = 0;
+
+        function startSession() {
+            if (sessionActive) return;
+            sessionActive = true;
+            
+            const terminal = document.getElementById('terminal-content');
+            const submitBtn = document.getElementById('submit-btn');
+            const statusLight = document.getElementById('status-light');
+            const stepActive = document.getElementById('step-active');
+            const liveIndicator = document.getElementById('live-indicator');
+
+            // Update UI components
+            statusLight.querySelector('.w-2').classList.remove('bg-primary');
+            statusLight.querySelector('.w-2').classList.add('bg-secondary');
+            statusLight.querySelector('span:last-child').textContent = 'Live Session: Active';
+            
+            submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            liveIndicator.textContent = 'RUNNING';
+            liveIndicator.classList.add('text-secondary');
+
+            // Log session start in terminal
+            const startLog = document.createElement('div');
+            startLog.className = 'text-primary font-medium border-t border-outline-variant pt-2 mt-2';
+            startLog.innerHTML = `<span class="font-bold">[LOG]</span> Session Started: ${new Date().toLocaleTimeString()}<br><span class="font-bold">[LOG]</span> Loading Unit CX-2901 Calibration Data... Done.`;
+            terminal.appendChild(startLog);
+
+            setTimeout(() => {
+                stepActive.classList.remove('hidden');
+                terminal.scrollTop = terminal.scrollHeight;
+            }, 500);
+
+            // Start Timer
+            timerInterval = setInterval(() => {
+                seconds++;
+                const h = Math.floor(seconds / 3600).toString().padStart(2, '0');
+                const m = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
+                const s = (seconds % 60).toString().padStart(2, '0');
+                document.getElementById('session-timer').textContent = `${h}:${m}:${s}`;
+            }, 1000);
+        }
+
+        // Simple mock interaction for the submit button
+        document.getElementById('submit-btn').addEventListener('click', function() {
+            if (!sessionActive) return;
+            const terminal = document.getElementById('terminal-content');
+            const log = document.createElement('div');
+            log.className = 'text-on-surface bg-surface-container-low p-2 rounded';
+            log.innerHTML = `<span class="text-primary font-bold">[DATA]</span> Entry submitted. Validating range...<br><span class="text-primary font-bold">[PASS]</span> Value 512.4V is within acceptable tolerance (+/- 5%).`;
+            terminal.appendChild(log);
+            terminal.scrollTop = terminal.scrollHeight;
+        });
+    </script>
+</body></html>

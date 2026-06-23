@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      line-height: 1;
+      text-transform: none;
+      letter-spacing: normal;
+      word-wrap: normal;
+      white-space: nowrap;
+      direction: ltr;
+    }
+    /* Industrial Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0e1513; }
+    ::-webkit-scrollbar-thumb { background: #3c4a46; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #859490; }
+    
+    .glass-card {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(8px);
+      border: 1px solid #334155;
+    }
+  </style>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-secondary-fixed-variant": "#005236",
+            "inverse-on-surface": "#2b3230",
+            "on-secondary-fixed": "#002113",
+            "background": "#0e1513",
+            "error": "#ffb4ab",
+            "on-tertiary-fixed": "#07006c",
+            "surface-bright": "#333b39",
+            "secondary-container": "#00a572",
+            "surface-container-high": "#242b2a",
+            "primary-container": "#2dd4bf",
+            "primary": "#57f1db",
+            "surface-dim": "#0e1513",
+            "secondary-fixed": "#6ffbbe",
+            "tertiary-container": "#b6b8ff",
+            "on-surface-variant": "#bacac5",
+            "on-surface": "#dde4e1",
+            "on-secondary": "#003824",
+            "on-tertiary": "#1000a9",
+            "on-error": "#690005",
+            "surface-container-highest": "#2f3634",
+            "primary-fixed": "#62fae3",
+            "secondary": "#4edea3",
+            "inverse-surface": "#dde4e1",
+            "on-tertiary-container": "#3636c4",
+            "surface-tint": "#3cddc7",
+            "surface-container-low": "#161d1b",
+            "on-secondary-container": "#00311f",
+            "surface-variant": "#2f3634",
+            "tertiary": "#d7d6ff",
+            "primary-fixed-dim": "#3cddc7",
+            "on-error-container": "#ffdad6",
+            "surface-container-lowest": "#09100e",
+            "secondary-fixed-dim": "#4edea3",
+            "on-primary-container": "#00574d",
+            "on-background": "#dde4e1",
+            "on-primary": "#003731",
+            "surface-container": "#1a211f",
+            "on-tertiary-fixed-variant": "#2f2ebe",
+            "surface": "#0e1513",
+            "outline-variant": "#3c4a46",
+            "on-primary-fixed": "#00201c",
+            "inverse-primary": "#006b5f",
+            "outline": "#859490",
+            "tertiary-fixed-dim": "#c0c1ff",
+            "on-primary-fixed-variant": "#005047",
+            "tertiary-fixed": "#e1e0ff",
+            "error-container": "#93000a"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "container-margin": "24px",
+            "gutter": "16px",
+            "sidebar-width": "280px",
+            "section-gap": "48px",
+            "base": "4px"
+          },
+          "fontFamily": {
+            "label-md": ["JetBrains Mono"],
+            "headline-lg": ["Inter"],
+            "display": ["Inter"],
+            "body-lg": ["Inter"],
+            "body-md": ["Inter"],
+            "label-sm": ["JetBrains Mono"],
+            "headline-lg-mobile": ["Inter"],
+            "headline-md": ["Inter"],
+            "body-sm": ["Inter"]
+          },
+          "fontSize": {
+            "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+            "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+            "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+            "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+            "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+            "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+            "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+            "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+            "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md overflow-x-hidden">
+<!-- Top Navigation Shell -->
+<header class="fixed top-0 w-full z-40 bg-background border-b border-outline-variant flex justify-between items-center h-16 px-container-margin">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary cursor-pointer lg:hidden" data-icon="menu">menu</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">EPC Intelligence Core</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex gap-6 mr-4">
+<a class="font-label-md text-label-md text-primary font-bold" href="#">Documentation</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">Project Switcher</a>
+</div>
+<div class="w-10 h-10 rounded-full border border-primary overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a high-level project manager in a sleek, dark tech environment. Soft cyan rim lighting highlights his features against a backdrop of glowing server racks and digital architecture, maintaining a premium industrial aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCq5QAIUxtMzPLDEBz5lJt7m_QJFJOwkq3Cbq0rvvxsHwzeUCI1TlVVxHB7xMr73fuLGeDIjYVYZm_UYd81soucsR57PKGrwmPwOWPX9SO7VPBxe-05uPgKVGCGVHKURHGbGT773-8paeYZGBSuLUKySVhN1LQNaU41gMNspt5sq5QDhFKih8mXcxwMmcskoXCjx-lao3j1vj4hxu-xpYCtBAfB86bp61IqE4o9PLE-xv7BgFRA8JpZKvIeLAU0JOPXdtW8ygS0Q7DT"/>
+</div>
+</div>
+</header>
+<!-- Navigation Drawer (Desktop) -->
+<aside class="fixed left-0 top-0 h-full w-sidebar-width z-50 bg-surface-container border-r border-outline-variant hidden lg:flex flex-col py-6">
+<div class="px-6 mb-10 flex flex-col gap-2">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-primary-container/10 rounded-lg">
+<span class="material-symbols-outlined text-primary" data-icon="smart_toy">smart_toy</span>
+</div>
+<span class="font-headline-md text-headline-md text-primary">Intelligence</span>
+</div>
+<p class="text-on-surface-variant font-label-sm text-label-sm px-1">v2.4.0 • Core Engine</p>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-4 text-on-surface-variant py-3 px-6 hover:bg-surface-container-highest transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant py-3 px-6 hover:bg-surface-container-highest transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="swap_horiz">swap_horiz</span>
+<span class="font-label-md text-label-md">Project Switcher</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant py-3 px-6 hover:bg-surface-container-highest transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="construction">construction</span>
+<span class="font-label-md text-label-md">Site Monitoring</span>
+</a>
+<a class="flex items-center gap-4 bg-secondary-container text-on-secondary-container border-l-2 border-primary py-3 px-6" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="font-label-md text-label-md font-bold">Documentation</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant py-3 px-6 hover:bg-surface-container-highest transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="smart_toy">smart_toy</span>
+<span class="font-label-md text-label-md">RFI Copilot</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant py-3 px-6 hover:bg-surface-container-highest transition-all duration-200 mt-auto" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content Area -->
+<main class="lg:ml-sidebar-width pt-16 min-h-screen">
+<div class="p-container-margin max-w-7xl mx-auto space-y-gutter">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Document Ingestion Hub</h2>
+<p class="text-on-surface-variant font-body-md">Process and vectorize EPC documentation for project-wide intelligence.</p>
+</div>
+<div class="flex gap-3">
+<button class="bg-surface-container-highest border border-outline-variant px-4 py-2 rounded flex items-center gap-2 hover:bg-surface-bright transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="sync">sync</span>
+<span class="font-label-md text-label-md">Sync Logs</span>
+</button>
+</div>
+</div>
+<!-- Ingestion Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Upload Card -->
+<div class="lg:col-span-5 glass-card rounded-xl p-6 flex flex-col h-full">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary" data-icon="cloud_upload">cloud_upload</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Upload PDF</h3>
+</div>
+<!-- Drag and Drop Zone -->
+<div class="flex-1 border-2 border-dashed border-outline-variant rounded-xl flex flex-col items-center justify-center p-8 bg-surface-container-lowest/30 hover:border-primary/50 transition-all cursor-pointer group mb-6 relative" id="drop-zone">
+<div class="p-4 bg-primary/10 rounded-full mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="upload_file">upload_file</span>
+</div>
+<p class="font-label-md text-label-md text-on-surface mb-1">Drag and drop PDF files here</p>
+<p class="text-on-surface-variant text-label-sm font-label-sm">Maximum file size: 500MB</p>
+<!-- Progress Mockup (Hidden by default) -->
+<div class="hidden absolute inset-0 bg-background/90 backdrop-blur flex flex-col items-center justify-center p-8 rounded-xl" id="upload-progress">
+<div class="w-full bg-surface-container-highest h-2 rounded-full overflow-hidden mb-3">
+<div class="h-full bg-primary w-2/3 transition-all duration-700 ease-in-out"></div>
+</div>
+<p class="font-label-md text-label-md text-primary">Ingesting: Chiller_Spec_V2.pdf (67%)</p>
+<p class="text-on-surface-variant text-label-sm">Extracting chunks and metadata...</p>
+</div>
+</div>
+<!-- Form Controls -->
+<div class="space-y-4">
+<div>
+<label class="font-label-sm text-label-sm text-on-surface-variant block mb-2">Document Type</label>
+<select class="w-full bg-surface-container-highest border border-outline-variant rounded p-3 text-on-surface focus:border-primary outline-none appearance-none">
+<option>Submittal</option>
+<option>Spec</option>
+<option>Standard</option>
+<option>RFI Log</option>
+</select>
+</div>
+<input accept=".pdf" class="hidden" id="file-input" type="file"/>
+<button class="w-full bg-primary text-on-primary font-bold py-3 rounded hover:bg-primary-fixed-dim transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/10" onclick="document.getElementById('file-input').click()">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+              Select PDF File
+            </button>
+</div>
+</div>
+<!-- Recent Uploads Table -->
+<div class="lg:col-span-7 glass-card rounded-xl overflow-hidden flex flex-col">
+<div class="p-6 border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md text-on-surface">Vectorized Documents</h3>
+<span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-label-sm font-label-sm">124 Total Files</span>
+</div>
+<div class="overflow-x-auto flex-1">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-highest/50">
+<tr>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant border-b border-outline-variant">FILENAME</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant border-b border-outline-variant">TYPE</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant border-b border-outline-variant">UPLOADED</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant border-b border-outline-variant">CHUNKS</th>
+<th class="px-6 py-4 font-label-md text-label-md text-on-surface-variant border-b border-outline-variant text-right">ACTIONS</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/30">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-highest/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-error" data-icon="picture_as_pdf">picture_as_pdf</span>
+<span class="font-body-md font-medium text-on-surface">Chiller_Spec_V2.pdf</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="border border-secondary/50 bg-secondary/10 text-secondary px-2 py-0.5 rounded text-label-sm font-label-sm">Spec</span>
+</td>
+<td class="px-6 py-4 font-label-md text-on-surface-variant text-label-sm">Oct 24, 2023</td>
+<td class="px-6 py-4 font-label-md text-primary text-label-sm">1,248</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-xl" data-icon="visibility">visibility</span></button>
+<button class="p-2 text-on-surface-variant hover:text-error transition-colors"><span class="material-symbols-outlined text-xl" data-icon="delete">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-highest/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-error" data-icon="picture_as_pdf">picture_as_pdf</span>
+<span class="font-body-md font-medium text-on-surface">HVAC_Submittal_R3.pdf</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="border border-tertiary/50 bg-tertiary/10 text-tertiary px-2 py-0.5 rounded text-label-sm font-label-sm">Submittal</span>
+</td>
+<td class="px-6 py-4 font-label-md text-on-surface-variant text-label-sm">Oct 22, 2023</td>
+<td class="px-6 py-4 font-label-md text-primary text-label-sm">842</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-xl" data-icon="visibility">visibility</span></button>
+<button class="p-2 text-on-surface-variant hover:text-error transition-colors"><span class="material-symbols-outlined text-xl" data-icon="delete">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-highest/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-error" data-icon="picture_as_pdf">picture_as_pdf</span>
+<span class="font-body-md font-medium text-on-surface">ASHRAE_90.1_Std.pdf</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="border border-outline bg-surface-container-highest text-on-surface px-2 py-0.5 rounded text-label-sm font-label-sm">Standard</span>
+</td>
+<td class="px-6 py-4 font-label-md text-on-surface-variant text-label-sm">Oct 20, 2023</td>
+<td class="px-6 py-4 font-label-md text-primary text-label-sm">4,192</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-xl" data-icon="visibility">visibility</span></button>
+<button class="p-2 text-on-surface-variant hover:text-error transition-colors"><span class="material-symbols-outlined text-xl" data-icon="delete">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-highest/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-error" data-icon="picture_as_pdf">picture_as_pdf</span>
+<span class="font-body-md font-medium text-on-surface">Project_RFI_Log_Oct.pdf</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="border border-primary/50 bg-primary/10 text-primary px-2 py-0.5 rounded text-label-sm font-label-sm">RFI Log</span>
+</td>
+<td class="px-6 py-4 font-label-md text-on-surface-variant text-label-sm">Oct 19, 2023</td>
+<td class="px-6 py-4 font-label-md text-primary text-label-sm">156</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-xl" data-icon="visibility">visibility</span></button>
+<button class="p-2 text-on-surface-variant hover:text-error transition-colors"><span class="material-symbols-outlined text-xl" data-icon="delete">delete</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 border-t border-outline-variant flex justify-between items-center bg-surface-container-low/50">
+<button class="text-on-surface-variant hover:text-on-surface transition-colors font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="chevron_left">chevron_left</span> Previous
+             </button>
+<div class="flex gap-2">
+<span class="w-8 h-8 flex items-center justify-center bg-primary text-on-primary rounded font-label-sm">1</span>
+<span class="w-8 h-8 flex items-center justify-center hover:bg-surface-container-highest rounded font-label-sm cursor-pointer">2</span>
+<span class="w-8 h-8 flex items-center justify-center hover:bg-surface-container-highest rounded font-label-sm cursor-pointer">3</span>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface transition-colors font-label-sm text-label-sm flex items-center gap-1">
+               Next <span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- System Health Bento -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="glass-card p-4 rounded-lg flex items-center gap-4">
+<div class="w-12 h-12 bg-primary/20 rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="memory">memory</span>
+</div>
+<div>
+<p class="text-on-surface-variant text-label-sm font-label-sm">VECTOR ENGINE</p>
+<p class="font-bold text-on-surface">Active • 1.4ms Latency</p>
+</div>
+</div>
+<div class="glass-card p-4 rounded-lg flex items-center gap-4">
+<div class="w-12 h-12 bg-secondary/20 rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" data-icon="database">database</span>
+</div>
+<div>
+<p class="text-on-surface-variant text-label-sm font-label-sm">STORAGE UTILIZATION</p>
+<p class="font-bold text-on-surface">1.2 TB / 10 TB</p>
+</div>
+</div>
+<div class="glass-card p-4 rounded-lg flex items-center gap-4">
+<div class="w-12 h-12 bg-tertiary/20 rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary" data-icon="security">security</span>
+</div>
+<div>
+<p class="text-on-surface-variant text-label-sm font-label-sm">DATA ENCRYPTION</p>
+<p class="font-bold text-on-surface">AES-256 Enabled</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script>
+    // Micro-interactions for Drag & Drop
+    const dropZone = document.getElementById('drop-zone');
+    const uploadProgress = document.getElementById('upload-progress');
+
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('border-primary');
+      dropZone.classList.add('bg-primary/5');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('border-primary');
+      dropZone.classList.remove('bg-primary/5');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('border-primary');
+      dropZone.classList.remove('bg-primary/5');
+      
+      // Show mockup progress
+      uploadProgress.classList.remove('hidden');
+      setTimeout(() => {
+        uploadProgress.classList.add('hidden');
+        alert('Document successfully ingested and vectorized.');
+      }, 3000);
+    });
+
+    // Interaction for mobile sidebar toggle (simplified for demo)
+    document.querySelector('.material-symbols-outlined[data-icon="menu"]').addEventListener('click', () => {
+       alert('Navigation drawer would slide in on mobile.');
+    });
+  </script>
+</body></html>
