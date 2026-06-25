@@ -1,10 +1,10 @@
 # Nixpacks configuration for EPC Intelligence Core
-# Provides system-level packages needed at runtime
 
 [phases.setup]
 nixPkgs = [
+    "python311",     # Python 3.11 interpreter
+    "python311Packages.pip",  # pip for installing requirements
     "tesseract",     # Required by pytesseract for OCR
-    "libgcc",        # Base C runtime
 ]
 
 [start]
