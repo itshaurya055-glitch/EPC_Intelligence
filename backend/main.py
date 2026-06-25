@@ -9,6 +9,7 @@ Initializes the FastAPI app with:
 """
 
 import logging
+import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -79,14 +80,24 @@ app = FastAPI(
 
 # ── CORS Middleware ────────────────────────────────────────────────────────────
 
+# Build allowed origins: always include localhost, plus any extras from env
+_default_origins = [
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:5173",
+]
+_extra_origins = [
+    o.strip()
+    for o in os.environ.get("ALLOWED_ORIGINS", "").split(",")
+    if o.strip()
+]
+_allow_origins = _default_origins + _extra_origins
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://localhost:5173",  # Vite dev server
-        "http://127.0.0.1:3000",
-        "http://127.0.0.1:5173",
-    ],
+    allow_origins=_allow_origins,
+    allow_origin_regex=r"https://.*\.up\.railway\.app",  # all Railway preview URLs
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -96,7 +107,6 @@ app.add_middleware(
 # ── Frontend SPA Route ─────────────────────────────────────────────────────────
 
 from fastapi.responses import HTMLResponse
-import os
 
 @app.get("/", response_class=HTMLResponse)
 async def read_index():

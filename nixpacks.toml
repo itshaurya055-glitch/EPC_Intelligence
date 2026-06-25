@@ -1,0 +1,11 @@
+# Nixpacks configuration for EPC Intelligence Core
+# Provides system-level packages needed at runtime
+
+[phases.setup]
+nixPkgs = [
+    "tesseract",     # Required by pytesseract for OCR
+    "libgcc",        # Base C runtime
+]
+
+[start]
+cmd = "uvicorn main:app --host 0.0.0.0 --port $PORT --workers 1"
